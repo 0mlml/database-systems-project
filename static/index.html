@@ -37,8 +37,25 @@
     <div id="premadeQueries">
         <button onclick="executeQuery('SELECT * FROM doctor')">Select all doctors</button>
         <button onclick="executeQuery('SELECT * FROM patient')">Select all patients</button>
-        <button onclick="executeQuery(`INSERT INTO doctor VALUES (11226, 'Rob', 'Disease', 'Contagious', '+3581428972', 'Day');`)">Insert Rob</button>
-        <button onclick="executeQuery(`DELETE FROM doctor WHERE doctorid = 11226;`)">Delete Rob</button>
+    </div>
+    <div id="insertQueryBuilder">
+        <h3>Insert query builder:</h3>
+        <input type="text" id="tableName" placeholder="Enter the name of the table" onchange="fetchTableHeaders()">
+        <table></table>
+        <button
+            onclick="executeQuery(`INSERT INTO ${document.querySelector('#tableName').value} VALUES (${Array.from(document.getElementById('insertQueryBuilder').querySelector('table').children[1].children).map(e => wrapIfNotNumeric(e.children[0].value)).join(', ')})`)">Submit</button>
+    </div>
+    <div id="deleteQueryBuilder">
+        <h3>Delete query builder:</h3>
+        <input type="text" id="deleteTableName" placeholder="Enter the name of the table">
+        <input type="text" id="deleteCondition" placeholder="Enter the condition">
+        <button
+            onclick="executeQuery(`DELETE FROM ${document.querySelector('#deleteTableName').value} WHERE ${document.querySelector('#deleteCondition').value}`)">Submit</button>
+    </div>
+    <div id="customQuery">
+        <h3>Custom query:</h3>
+        <input type="text" id="customQuery" placeholder="Custom query">
+        <button onclick="executeQuery(document.querySelector('input#customQuery').value)">Submit</button>
     </div>
 
     <h2>Query Result:</h2>
@@ -50,15 +67,62 @@
             executeQuery(document.getElementById('query').value);
         });
 
-        function executeQuery(q) {
+        function executeQuery(query) {
             fetch('/submitQuery', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ query: q })
+                body: JSON.stringify({ query })
             })
                 .then(response => response.text())
                 .then(text => document.getElementById('result').value = text)
                 .catch(err => console.error('Error:', err));
+        }
+
+        function fetchTableHeaders() {
+            const tableName = document.getElementById('tableName').value;
+
+            fetch('/fetchTableHeaders', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ tableName })
+            })
+                .then(response => {
+                    if (response.status !== 200) {
+                        console.error('Error:', response.status);
+                        return;
+                    }
+                    return response.text()
+                })
+                .then((text) => {
+                    if (!text) return;
+                    const table = document.getElementById('insertQueryBuilder').querySelector('table');
+                    table.innerHTML = '';
+
+                    const headerRow = document.createElement('tr');
+                    const headers = text.split(',');
+                    headers.forEach(header => {
+                        const th = document.createElement('th');
+                        th.textContent = header.trim();
+                        headerRow.appendChild(th);
+                    });
+                    table.appendChild(headerRow);
+
+                    const inputRow = document.createElement('tr');
+                    headers.forEach(header => {
+                        const td = document.createElement('td');
+                        const input = document.createElement('input');
+                        input.type = 'text';
+                        input.name = header.trim();
+                        td.appendChild(input);
+                        inputRow.appendChild(td);
+                    });
+                    table.appendChild(inputRow);
+                })
+                .catch(err => console.error('Error:', err));
+        }
+
+        function wrapIfNotNumeric(s) {
+            return isNaN(s) ? `'${s}'` : s;
         }
     </script>
 </body>
