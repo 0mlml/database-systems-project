@@ -20,5 +20,7 @@
 !static/index.html
 !hospital-mgr.cfg
 
+!postgres_frontend.exe
+
 # ...even if they are in subdirectories
 !*/
