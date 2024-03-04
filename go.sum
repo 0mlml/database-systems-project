@@ -1,0 +1,4 @@
+github.com/0mlml/cfgparser v1.2.0 h1:XbnGgANMN7sy/+7lVd4OwTV6Xgc8qniJ+2sx18pEl3E=
+github.com/0mlml/cfgparser v1.2.0/go.mod h1:UNZi9H4VLBE0fUUSuc/oG0il8Yjzc29+zOpP50p0FF0=
+github.com/lib/pq v1.10.9 h1:YXG7RB+JIjhP29X+OtkiDnYaXQwpS4JEWq7dtCCRUEw=
+github.com/lib/pq v1.10.9/go.mod h1:AlVN5x4E4T544tWzH6hKfbfQvm3HdbOxrmggDNAPY9o=

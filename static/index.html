@@ -1,22 +1,66 @@
 <!DOCTYPE html>
 <html>
-<head>
-    <title>Add Event</title>
-</head>
-<body>
-    <h2>Add Event</h2>
-    <form id="eventForm" endpoint="/events">
-        <label for="name">Event Name:</label><br>
-        <input type="text" id="name" name="name"><br>
-        <label for="description">Description:</label><br>
-        <input type="text" id="description" name="description"><br>
-        <label for="date">Date:</label><br>
-        <input type="text" id="date" name="date"><br>
-        <label for="location">Location:</label><br>
-        <input type="text" id="location" name="location"><br>
-        <input type="submit">
-    </form> 
 
-    <script src="app.js"></script>
+<head>
+    <title>Query Interface</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+
+        h2 {
+            color: #333;
+        }
+
+        button {
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px 15px;
+            border: none;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #45a049;
+        }
+
+        textarea#result {
+            width: 95%;
+            padding: 10px;
+            font-family: monospace;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="premadeQueries">
+        <button onclick="executeQuery('SELECT * FROM doctor')">Select all doctors</button>
+        <button onclick="executeQuery('SELECT * FROM patient')">Select all patients</button>
+        <button onclick="executeQuery(`INSERT INTO doctor VALUES (11226, 'Rob', 'Disease', 'Contagious', '+3581428972', 'Day');`)">Insert Rob</button>
+        <button onclick="executeQuery(`DELETE FROM doctor WHERE doctorid = 11226;`)">Delete Rob</button>
+    </div>
+
+    <h2>Query Result:</h2>
+    <textarea id="result" rows="10" cols="90" readonly></textarea>
+
+    <script>
+        document.getElementById('queryForm').addEventListener('submit', function (e) {
+            e.preventDefault();
+            executeQuery(document.getElementById('query').value);
+        });
+
+        function executeQuery(q) {
+            fetch('/submitQuery', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ query: q })
+            })
+                .then(response => response.text())
+                .then(text => document.getElementById('result').value = text)
+                .catch(err => console.error('Error:', err));
+        }
+    </script>
 </body>
+
 </html>

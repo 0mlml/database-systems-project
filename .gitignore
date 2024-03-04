@@ -17,9 +17,8 @@
 !README.md
 !LICENSE
 
-!static/*
-
-# !Makefile
+!static/index.html
+!hospital-mgr.cfg
 
 # ...even if they are in subdirectories
 !*/
