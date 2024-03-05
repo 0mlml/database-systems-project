@@ -54,7 +54,10 @@
                 <div class="form-group">
                     <input type="text" id="tableName" class="form-control" placeholder="Enter the name of the table">
                 </div>
-                <table id="insertQueryTable" class="table table-bordered"></table>
+                <div class="table-responsive">
+                    <table id="insertQueryTable" class="table table-bordered"></table>
+                </div>
+                
                 <button class="btn btn-success"
                     onclick="executeQuery(`INSERT INTO ${document.querySelector('#tableName').value} VALUES (${Array.from(document.getElementById('insertQueryTable').children[1].children).map(e => wrapIfNotNumeric(e.children[0].value)).join(', ')})`)">Submit</button>
             </div>
