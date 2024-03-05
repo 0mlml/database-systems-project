@@ -40,8 +40,10 @@
         <div class="card">
             <div class="card-header">Premade Queries</div>
             <div class="card-body">
-                <button class="btn btn-primary mr-2" onclick="executeQuery('SELECT * FROM doctor')">Select all doctors</button>
-                <button class="btn btn-primary" onclick="executeQuery('SELECT * FROM patient')">Select all patients</button>
+                <button class="btn btn-primary mr-2" onclick="executeQuery('SELECT * FROM doctor')">Select all
+                    doctors</button>
+                <button class="btn btn-primary" onclick="executeQuery('SELECT * FROM patient')">Select all
+                    patients</button>
             </div>
         </div>
 
@@ -50,11 +52,11 @@
             <div class="card-header">Insert Query Builder</div>
             <div class="card-body">
                 <div class="form-group">
-                    <input type="text" id="tableName" class="form-control" placeholder="Enter the name of the table" onchange="fetchTableHeaders()">
+                    <input type="text" id="tableName" class="form-control" placeholder="Enter the name of the table">
                 </div>
-                <table class="table table-bordered"></table>
+                <table id="insertQueryTable" class="table table-bordered"></table>
                 <button class="btn btn-success"
-                        onclick="executeQuery(`INSERT INTO ${document.querySelector('#tableName').value} VALUES (${Array.from(document.getElementById('insertQueryBuilder').querySelector('table').children[1].children).map(e => wrapIfNotNumeric(e.children[0].value)).join(', ')})`)">Submit</button>
+                    onclick="executeQuery(`INSERT INTO ${document.querySelector('#tableName').value} VALUES (${Array.from(document.getElementById('insertQueryTable').children[1].children).map(e => wrapIfNotNumeric(e.children[0].value)).join(', ')})`)">Submit</button>
             </div>
         </div>
 
@@ -63,13 +65,14 @@
             <div class="card-header">Delete Query Builder</div>
             <div class="card-body">
                 <div class="form-group">
-                    <input type="text" id="deleteTableName" class="form-control" placeholder="Enter the name of the table">
+                    <input type="text" id="deleteTableName" class="form-control"
+                        placeholder="Enter the name of the table">
                 </div>
                 <div class="form-group">
                     <input type="text" id="deleteCondition" class="form-control" placeholder="Enter the condition">
                 </div>
                 <button class="btn btn-danger"
-                        onclick="executeQuery(`DELETE FROM ${document.querySelector('#deleteTableName').value} WHERE ${document.querySelector('#deleteCondition').value}`)">Submit</button>
+                    onclick="executeQuery(`DELETE FROM ${document.querySelector('#deleteTableName').value} WHERE ${document.querySelector('#deleteCondition').value}`)">Submit</button>
             </div>
         </div>
 
@@ -80,7 +83,8 @@
                 <div class="form-group">
                     <input type="text" id="customQuery" class="form-control" placeholder="Enter your custom query">
                 </div>
-                <button class="btn btn-info" onclick="executeQuery(document.querySelector('input#customQuery').value)">Submit</button>
+                <button class="btn btn-info"
+                    onclick="executeQuery(document.querySelector('input#customQuery').value)">Submit</button>
             </div>
         </div>
 
@@ -92,10 +96,11 @@
             </div>
         </div>
     </div>
-    <script>
-        document.getElementById('queryForm').addEventListener('submit', function (e) {
-            e.preventDefault();
-            executeQuery(document.getElementById('query').value);
+    <script defer>
+        let tableHeadersTimeout = null;
+        document.getElementById('tableName').addEventListener('keypress', function (e) {
+            clearTimeout(tableHeadersTimeout);
+            tableHeadersTimeout = setTimeout(fetchTableHeaders, 500);
         });
 
         function executeQuery(query) {
@@ -119,14 +124,16 @@
             })
                 .then(response => {
                     if (response.status !== 200) {
-                        console.error('Error:', response.status);
+                        if (response.status !== 404) console.error('Error:', response.status);
+                        const table = document.getElementById('insertQueryTable');
+                        table.innerHTML = '';
                         return;
                     }
                     return response.text()
                 })
                 .then((text) => {
                     if (!text) return;
-                    const table = document.getElementById('insertQueryBuilder').querySelector('table');
+                    const table = document.getElementById('insertQueryTable');
                     table.innerHTML = '';
 
                     const headerRow = document.createElement('tr');
