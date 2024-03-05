@@ -30,11 +30,12 @@
                     <input type="text" id="tableName" class="form-control" placeholder="Enter the name of the table">
                 </div>
                 <div class="table-responsive">
-                    <table id="insertQueryTable" class="table table-bordered"></table>
+                    <div id="insertQueryTable" class="table-grid"></div>
                 </div>
                 
-                <button class="btn btn-success"
-                    onclick="executeQuery(`INSERT INTO ${document.querySelector('#tableName').value} VALUES (${Array.from(document.getElementById('insertQueryTable').children[1].children).map(e => wrapIfNotNumeric(e.children[0].value)).join(', ')})`)">Submit</button>
+                
+                <button class="btn btn-success" onclick="InsertExecuteQuery()">Submit</button>
+
             </div>
         </div>
 

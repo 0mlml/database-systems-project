@@ -23,43 +23,64 @@ function fetchTableHeaders() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ tableName })
     })
-        .then(response => {
-            if (response.status !== 200) {
-                if (response.status !== 404) console.error('Error:', response.status);
-                const table = document.getElementById('insertQueryTable');
-                table.innerHTML = '';
-                return;
-            }
-            return response.text()
-        })
-        .then((text) => {
-            if (!text) return;
-            const table = document.getElementById('insertQueryTable');
-            table.innerHTML = '';
+    .then(response => {
+        if (response.status !== 200) {
+            console.error('Error:', response.status);
+            const tableGrid = document.getElementById('insertQueryTable');
+            tableGrid.innerHTML = '';
+            return;
+        }
+        return response.text();
+    })
+    .then((text) => {
+        if (!text) return;
+        const tableGrid = document.getElementById('insertQueryTable');
+        tableGrid.innerHTML = ''; 
+        tableGrid.className = 'table-grid'; 
 
-            const headerRow = document.createElement('tr');
-            const headers = text.split(',');
-            headers.forEach(header => {
-                const th = document.createElement('th');
-                th.textContent = header.trim();
-                headerRow.appendChild(th);
-            });
-            table.appendChild(headerRow);
+        const headers = text.split(',');
+        headers.forEach(header => {
+            // Create a single div container for each header
+            const divContainer = document.createElement('div');
+            divContainer.className = 'grid-item'; 
 
-            const inputRow = document.createElement('tr');
-            headers.forEach(header => {
-                const td = document.createElement('td');
-                const input = document.createElement('input');
-                input.type = 'text';
-                input.name = header.trim();
-                td.appendChild(input);
-                inputRow.appendChild(td);
-            });
-            table.appendChild(inputRow);
-        })
-        .catch(err => console.error('Error:', err));
+            // Create and append the header text
+            const headerText = document.createElement('div');
+            headerText.textContent = header.trim();
+            headerText.className = 'table-header';
+            divContainer.appendChild(headerText);
+
+           
+            const hr = document.createElement('hr');
+            divContainer.appendChild(hr);
+
+            // Create and append the input field
+            const inputField = document.createElement('input');
+            inputField.type = 'text';
+            inputField.name = header.trim();
+            inputField.className = 'table-input'; 
+            divContainer.appendChild(inputField);
+
+           
+            tableGrid.appendChild(divContainer);
+        });
+    })
+    .catch(err => console.error('Error:', err));
 }
+
+
+
 
 function wrapIfNotNumeric(s) {
     return isNaN(s) ? `'${s}'` : s;
+}
+
+function InsertExecuteQuery() {
+    const tableName = document.querySelector('#tableName').value;
+    const values = Array.from(document.querySelectorAll('.table-input'))
+        .map(input => wrapIfNotNumeric(input.value))
+        .join(', ');
+
+    const query = `INSERT INTO ${tableName} VALUES (${values})`;
+    executeQuery(query); 
 }
