@@ -18,6 +18,8 @@
 !LICENSE
 
 !static/index.html
+!static/styles.css
+!static/app.js
 !hospital-mgr.cfg
 
 !postgres_frontend.exe
