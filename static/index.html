@@ -15,10 +15,38 @@
         <div class="card">
             <div class="card-header">Premade Queries</div>
             <div class="card-body">
-                <button class="btn btn-primary mr-2" onclick="executeQuery('SELECT * FROM doctor')">Select all
-                    doctors</button>
-                <button class="btn btn-primary" onclick="executeQuery('SELECT * FROM patient')">Select all
-                    patients</button>
+                <button class="btn btn-primary" onclick="executeQuery('SELECT * FROM doctor')">Show all
+                    doctors records</button>
+                <button class="btn btn-primary" onclick="executeQuery('SELECT * FROM patient')">Show all
+                    patients records</button>
+                <button class="btn btn-primary"
+                    onclick="executeQuery('SELECT doctor.name, patient.name, time FROM doctor NATURAL JOIN appointment JOIN patient on appointment.patientid = patient.patientid;')">Show
+                    all appointments by
+                    name</button>
+                <div class="row-container">
+                    <button class="btn btn-primary"
+                        onclick="executeQuery(`SELECT name, patient.patientid, type FROM patient NATURAL JOIN (SELECT patientid, type FROM (prescription NATURAL JOIN prescription_drug_record) AS pr JOIN drug ON pr.drugid = drug.drugid) WHERE patient.patientid = ${document.querySelector('input#patientDrugId').value};`)">Drug
+                        list for PatientID</button>
+                    <input class="form-control" id="patientDrugId" type="text" placeholder="Enter PatientID"
+                        style="width: 150px">
+                </div>
+                <div class="row-container">
+                    <button class="btn btn-primary"
+                        onclick="executeQuery(`SELECT name FROM patient WHERE LOWER(name) LIKE LOWER('%$.{document.querySelector('input#patientNameSearch').value}%');`)">Search
+                        patient by
+                        name</button>
+                    <input class="form-control" id="patientNameSearch" type="text" placeholder="Enter patient name"
+                        style="width: 170px">
+                </div>
+                <div class="row-container">
+                    <button class="btn btn-primary" style="background-color: #28a745;"
+                        onclick="executeQuery('CREATE INDEX patient_name ON patient(name);')">Create patient name
+                        index</button>
+                    <button class="btn btn-primary" style="background-color: #28a745;" id="checkIndexSubmit">Create
+                        index exists</button>
+                    <button class="btn btn-primary" style="background-color: #28a745;"
+                        onclick="executeQuery('DROP INDEX patient_name;')">Delete patient name index</button>
+                </div>
             </div>
         </div>
 

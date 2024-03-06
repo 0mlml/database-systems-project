@@ -68,7 +68,7 @@ document.getElementById('insertQueryTableName').addEventListener('keypress', fun
                 }
                 return response.text();
             })
-            .then((text) => {
+            .then(text => {
                 if (!text) return;
                 const tableGrid = document.getElementById('insertQueryTable');
                 tableGrid.innerHTML = '';
@@ -141,4 +141,25 @@ document.getElementById('insertQuerySubmit').addEventListener('click', function 
 
     const query = `INSERT INTO ${tableName} VALUES (${values})`;
     executeQuery(query);
+});
+
+document.getElementById('checkIndexSubmit').addEventListener('click', function () {
+    executeQuery(`DO $$
+DECLARE
+    index_exists boolean;
+BEGIN
+    SELECT EXISTS (
+        SELECT 1
+        FROM pg_indexes
+        WHERE schemaname = 'public'
+        AND tablename = 'patient'
+        AND indexname = 'patient_name'
+    ) INTO index_exists;
+
+    IF index_exists THEN
+        RAISE NOTICE 'Index exists!';
+    ELSE
+        RAISE NOTICE 'Index does not exist!';
+    END IF;
+END $$;`);
 });

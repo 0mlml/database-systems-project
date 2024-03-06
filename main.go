@@ -265,6 +265,34 @@ func submitQueryHandler(w http.ResponseWriter, r *http.Request) {
 	w.Write([]byte(result))
 }
 
+func submitQueryRawHandler(w http.ResponseWriter, r *http.Request) {
+	type queryRequest struct {
+		Query string `json:"query"`
+	}
+	qr := queryRequest{}
+	err := json.NewDecoder(r.Body).Decode(&qr)
+
+	if err != nil {
+		w.WriteHeader(http.StatusBadRequest)
+		w.Write([]byte(err.Error()))
+		log.Printf("Error parsing request: %v", err)
+		return
+	}
+
+	log.Printf("Received raw query: %s\n", qr.Query)
+
+	result, err := executeQuery(qr.Query)
+
+	if err != nil {
+		w.WriteHeader(http.StatusInternalServerError)
+		w.Write([]byte(err.Error()))
+		log.Printf("Error executing query: %v", err)
+		return
+	}
+
+	w.Write([]byte(result))
+}
+
 func main() {
 	log.SetFlags(log.LstdFlags)
 
