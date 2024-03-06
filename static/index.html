@@ -32,7 +32,7 @@
                 </div>
                 <div class="row-container">
                     <button class="btn btn-primary"
-                        onclick="executeQuery(`SELECT name FROM patient WHERE LOWER(name) LIKE LOWER('%${document.querySelector('input#patientNameSearch').value}%');`)">Search
+                        onclick="executeQuery(`SELECT name FROM patient WHERE LOWER(name) LIKE LOWER('%${document.querySelector('input#patientNameSearch').value}%') ORDER BY name;`)">Search
                         patient by name</button>
                     <input class="form-control" id="patientNameSearch" type="text" placeholder="Enter patient name"
                         style="width: 170px">
