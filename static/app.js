@@ -134,7 +134,7 @@ document.getElementById('deleteQuerySubmit').addEventListener('click', function 
 });
 
 document.getElementById('insertQuerySubmit').addEventListener('click', function () {
-    const tableName = document.getElementById('tableName').value;
+    const tableName = document.getElementById('insertQueryTableName').value;
     const values = Array.from(document.querySelectorAll('.table-input'))
         .map(input => wrapIfNotNumeric(input.value))
         .join(', ');
