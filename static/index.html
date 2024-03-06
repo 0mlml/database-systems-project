@@ -32,17 +32,30 @@
                 </div>
                 <div class="row-container">
                     <button class="btn btn-primary"
-                        onclick="executeQuery(`SELECT name FROM patient WHERE LOWER(name) LIKE LOWER('%$.{document.querySelector('input#patientNameSearch').value}%');`)">Search
-                        patient by
-                        name</button>
+                        onclick="executeQuery(`SELECT name FROM patient WHERE LOWER(name) LIKE LOWER('%${document.querySelector('input#patientNameSearch').value}%');`)">Search
+                        patient by name</button>
                     <input class="form-control" id="patientNameSearch" type="text" placeholder="Enter patient name"
+                        style="width: 170px">
+                </div>
+                <div class="row-container">
+                    <button class="btn btn-primary"
+                        onclick="executeQuery(`SELECT name, deptname FROM department NATURAL JOIN patient WHERE patientid=${document.querySelector('input#patientDeptSearch').value};`)">Search
+                        patient department by ID</button>
+                    <input class="form-control" id="patientDeptSearch" type="text" placeholder="Enter patient ID"
+                        style="width: 170px">
+                </div>
+                <div class="row-container">
+                    <button class="btn btn-primary"
+                        onclick="executeQuery(`SELECT name, doctor.deptname FROM doctor JOIN department on doctor.deptname = department.deptname WHERE doctorid=${document.querySelector('input#doctorDeptSearch').value};`)">Search
+                        doctor department by ID</button>
+                    <input class="form-control" id="doctorDeptSearch" type="text" placeholder="Enter doctor ID"
                         style="width: 170px">
                 </div>
                 <div class="row-container">
                     <button class="btn btn-primary" style="background-color: #28a745;"
                         onclick="executeQuery('CREATE INDEX patient_name ON patient(name);')">Create patient name
                         index</button>
-                    <button class="btn btn-primary" style="background-color: #28a745;" id="checkIndexSubmit">Create
+                    <button class="btn btn-primary" style="background-color: #28a745;" id="checkIndexSubmit">Check if
                         index exists</button>
                     <button class="btn btn-primary" style="background-color: #28a745;"
                         onclick="executeQuery('DROP INDEX patient_name;')">Delete patient name index</button>

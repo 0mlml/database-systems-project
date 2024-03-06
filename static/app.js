@@ -144,22 +144,17 @@ document.getElementById('insertQuerySubmit').addEventListener('click', function 
 });
 
 document.getElementById('checkIndexSubmit').addEventListener('click', function () {
-    executeQuery(`DO $$
-DECLARE
-    index_exists boolean;
-BEGIN
-    SELECT EXISTS (
-        SELECT 1
-        FROM pg_indexes
-        WHERE schemaname = 'public'
-        AND tablename = 'patient'
-        AND indexname = 'patient_name'
-    ) INTO index_exists;
-
-    IF index_exists THEN
-        RAISE NOTICE 'Index exists!';
-    ELSE
-        RAISE NOTICE 'Index does not exist!';
-    END IF;
-END $$;`);
+    executeQuery(`CREATE INDEX patient_name ON patient(name);`);
+    returnText = document.getElementById('result').value;
+    setTimeout(function(){
+        if(document.getElementById('result').value == 'pq: relation "patient_name" already exists'){
+            document.getElementById('result').value = 'Index exists!';
+        }else{
+            executeQuery(`DROP INDEX patient_name;`);
+            setTimeout(function(){
+            document.getElementById('result').value = 'Index does not exist!';
+            }, 500);
+        }
+    },500);
+    console.log(returnText);
 });
