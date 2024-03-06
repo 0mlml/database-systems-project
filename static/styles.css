@@ -26,32 +26,39 @@ button:hover {
 textarea#result {
     width      : 95%;
     padding    : 10px;
-    min-height: 100px;
+    min-height : 100px;
     font-family: monospace;
 }
+
 .table-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); 
-    gap: 20px; 
-    padding: 10px; 
+    display              : grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap                  : 20px;
+    padding              : 10px;
 }
 
 .grid-item {
-    border: 1px solid #ccc; 
-    padding: 10px; 
-    background-color: #f9f9f9; 
+    border          : 1px solid #ccc;
+    padding         : 10px;
+    background-color: #f9f9f9;
 }
 
 .table-header {
-    font-weight: bold; 
-    
+    font-weight: bold;
+
 }
 
-
-
 .table-input {
-    width: 70%; 
+    width  : 70%;
     padding: 5px;
-    margin: 0 auto;
-    display: block; 
+    margin : 0 auto;
+    display: block;
+}
+
+.is-valid {
+    border-color: #28a745;
+}
+
+.is-invalid {
+    border-color: #dc3545;
 }

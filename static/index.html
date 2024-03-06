@@ -27,14 +27,15 @@
             <div class="card-header">Insert Query Builder</div>
             <div class="card-body">
                 <div class="form-group">
-                    <input type="text" id="tableName" class="form-control" placeholder="Enter the name of the table">
+                    <input type="text" id="insertQueryTableName" class="form-control"
+                        placeholder="Enter the name of the table">
                 </div>
                 <div class="table-responsive">
                     <div id="insertQueryTable" class="table-grid"></div>
                 </div>
-                
-                
-                <button class="btn btn-success" onclick="InsertExecuteQuery()">Submit</button>
+
+
+                <button class="btn btn-success" id="insertQuerySubmit">Submit</button>
 
             </div>
         </div>
@@ -44,14 +45,13 @@
             <div class="card-header">Delete Query Builder</div>
             <div class="card-body">
                 <div class="form-group">
-                    <input type="text" id="deleteTableName" class="form-control"
+                    <input type="text" id="deleteQueryTableName" class="form-control"
                         placeholder="Enter the name of the table">
                 </div>
                 <div class="form-group">
-                    <input type="text" id="deleteCondition" class="form-control" placeholder="Enter the condition">
+                    <input type="text" id="deleteQueryCondition" class="form-control" placeholder="Enter the condition">
                 </div>
-                <button class="btn btn-danger"
-                    onclick="executeQuery(`DELETE FROM ${document.querySelector('#deleteTableName').value} WHERE ${document.querySelector('#deleteCondition').value}`)">Submit</button>
+                <button class="btn btn-danger" id="deleteQuerySubmit">Submit</button>
             </div>
         </div>
 

@@ -202,6 +202,39 @@ func handleFetchTableHeaders(w http.ResponseWriter, r *http.Request) {
 	w.Write([]byte(keys))
 }
 
+func handleCheckTableExists(w http.ResponseWriter, r *http.Request) {
+	type tableExistsRequest struct {
+		TableName string `json:"tableName"`
+	}
+
+	ter := tableExistsRequest{}
+	err := json.NewDecoder(r.Body).Decode(&ter)
+
+	if err != nil {
+		w.WriteHeader(http.StatusBadRequest)
+		w.Write([]byte(err.Error()))
+		log.Printf("Error parsing request: %v", err)
+		return
+	}
+
+	log.Printf("Received table exists request: %s", ter.TableName)
+
+	exists, err := tableExists(ter.TableName)
+	if err != nil {
+		w.WriteHeader(http.StatusInternalServerError)
+		w.Write([]byte(err.Error()))
+		log.Printf("Error checking table existence: %v", err)
+		return
+	}
+
+	if exists {
+		w.Write([]byte("true"))
+	} else {
+		w.WriteHeader(http.StatusNotFound)
+		w.Write([]byte("false"))
+	}
+}
+
 func submitQueryHandler(w http.ResponseWriter, r *http.Request) {
 	type queryRequest struct {
 		Query string `json:"query"`
@@ -246,6 +279,7 @@ func main() {
 	log.Printf("Starting server on port %d, see http://localhost:%d\n", config.Int("port"), config.Int("port"))
 	http.HandleFunc("/submitQuery", submitQueryHandler)
 	http.HandleFunc("/fetchTableHeaders", handleFetchTableHeaders)
+	http.HandleFunc("/checkTableExists", handleCheckTableExists)
 	http.Handle("/", http.FileServer(http.Dir("static")))
 
 	http.ListenAndServe(fmt.Sprintf(":%d", config.Int("port")), nil)
